@@ -231,10 +231,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onTapCopy(
     String data,
   ) async {
+    HapticFeedback.lightImpact();
     await Clipboard.setData(
       ClipboardData(text: data),
     );
-    HapticFeedback.lightImpact();
     _showCopied();
   }
 
@@ -244,7 +244,10 @@ class _MyHomePageState extends State<MyHomePage> {
         content: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.check_circle),
+            Icon(
+              Icons.check_circle,
+              color: Colors.green,
+            ),
             SizedBox(width: 8),
             Text('Copied!'),
           ],
