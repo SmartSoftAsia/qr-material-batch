@@ -85,6 +85,9 @@ class _MyHomePageState extends State<MyHomePage> {
             maxLines: 1,
             maxLength: 15,
             textCapitalization: TextCapitalization.characters,
+            inputFormatters: [
+              UpperCaseTextFormatter(),
+            ],
             validator: (value) {
               return (value ?? '').trim().length == 15
                   ? null
@@ -109,6 +112,9 @@ class _MyHomePageState extends State<MyHomePage> {
             maxLines: 1,
             maxLength: 10,
             textCapitalization: TextCapitalization.characters,
+            inputFormatters: [
+              UpperCaseTextFormatter(),
+            ],
             validator: (value) {
               return (value ?? '').trim().length == 10
                   ? null
@@ -166,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Center(
           child: QrImageView(
             data: qrData,
-            size: 240,
+            size: 160,
           ),
         ),
         const SizedBox(height: 24),
@@ -253,6 +259,19 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }
