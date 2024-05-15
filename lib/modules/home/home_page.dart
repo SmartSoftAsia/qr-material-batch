@@ -195,9 +195,11 @@ class _HomeViewState extends State<HomeView> {
                     const SizedBox(height: 16),
                     FilledButton(
                       onPressed: cubit.onTapAdd,
+                      style: FilledButton.styleFrom(
+                        minimumSize: Size.fromHeight(48),
+                      ),
                       child: const Text('Add'),
                     ),
-                    const SizedBox(height: 16),
                   ],
                 ),
               ),
