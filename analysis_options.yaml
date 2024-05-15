@@ -16,6 +16,8 @@ linter:
     prefer_const_literals_to_create_immutables: true
 
 analyzer:
+  exclude:
+    - "**/*.g.dart"
   errors:
     always_use_package_imports: error
     always_declare_return_types: error
