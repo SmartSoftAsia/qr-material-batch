@@ -24,5 +24,5 @@ class HomeState extends Equatable {
   Map<String, dynamic> toJson() => _$HomeStateToJson(this);
 
   @override
-  List<Object?> get props => [items];
+  List<Object?> get props => [items.map((e) => e.qrData())];
 }
