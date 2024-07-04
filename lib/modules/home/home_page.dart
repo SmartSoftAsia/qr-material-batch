@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:qr_material_batch/modules/home/cubit/home_cubit.dart';
-import 'package:qr_material_batch/modules/home/cubit/home_state.dart';
-import 'package:qr_material_batch/modules/home/widgets/material_batch_item_tile.dart';
-import 'package:qr_material_batch/utils/upper_case_text_formatter.dart';
+import 'package:qr_material_batch/modules/add_barcode/add_barcode_page.dart';
+import 'package:qr_material_batch/modules/home/cubit/home_page_cubit.dart';
+import 'package:qr_material_batch/modules/home/cubit/home_page_state.dart';
+import 'package:qr_material_batch/modules/home/widgets/home_page_barcode_tile.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<HomeCubit>(
-      create: (context) => HomeCubit(),
+    return BlocProvider<HomePageCubit>(
+      create: (context) => HomePageCubit(),
       child: const HomeView(),
     );
   }
@@ -29,12 +28,12 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (builderContext, state) {
+    return BlocBuilder<HomePageCubit, HomePageState>(
+      builder: (context, state) {
         return Scaffold(
-          body: _gridView(builderContext),
+          body: _gridView(),
           floatingActionButton: IconButton.filled(
-            onPressed: () => _showForm(builderContext),
+            onPressed: _onTapAdd,
             icon: const Icon(
               Icons.add,
             ),
@@ -44,8 +43,8 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  Widget _gridView(BuildContext builderContext) {
-    final cubit = context.read<HomeCubit>();
+  Widget _gridView() {
+    final cubit = context.read<HomePageCubit>();
     final items = cubit.state.items;
     return Stack(
       fit: StackFit.expand,
@@ -66,9 +65,9 @@ class _HomeViewState extends State<HomeView> {
               childAspectRatio: width / 260,
               children: items
                   .map(
-                    (e) => MaterialBatchItemTile(
+                    (e) => HomePageBarcodeTile(
                       item: e,
-                      onTapDelete: () => cubit.onDeleteMaterialBatchItem(e),
+                      onTapDelete: () => cubit.onDeleteItem(e),
                     ),
                   )
                   .toList(),
@@ -79,9 +78,7 @@ class _HomeViewState extends State<HomeView> {
           visible: items.isEmpty,
           child: Center(
             child: GestureDetector(
-              onTap: () {
-                _showForm(builderContext);
-              },
+              onTap: _onTapAdd,
               child: SvgPicture.asset(
                 'assets/images/add_files.svg',
                 height: 240,
@@ -94,119 +91,11 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  void _showForm(BuildContext builderContext) {
-    showDialog(
-      context: builderContext,
-      builder: (_) {
-        final cubit = builderContext.read<HomeCubit>();
-        return BlocProvider.value(
-          value: builderContext.read<HomeCubit>(),
-          child: Dialog(
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              constraints: const BoxConstraints(maxWidth: 480),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16),
-                color: Colors.white,
-              ),
-              clipBehavior: Clip.hardEdge,
-              child: Form(
-                key: cubit.formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Material Code',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          gapPadding: 4,
-                        ),
-                      ),
-                      maxLines: 1,
-                      maxLength: 15,
-                      textCapitalization: TextCapitalization.characters,
-                      inputFormatters: [
-                        UpperCaseTextFormatter(),
-                      ],
-                      validator: (value) {
-                        return (value ?? '').trim().length == 15
-                            ? null
-                            : 'Required 15 Characters';
-                      },
-                      onSaved: (newValue) {
-                        cubit.materialCodeText = newValue?.trim() ?? '';
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Batch No.',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          gapPadding: 4,
-                        ),
-                      ),
-                      maxLines: 1,
-                      maxLength: 10,
-                      textCapitalization: TextCapitalization.characters,
-                      inputFormatters: [
-                        UpperCaseTextFormatter(),
-                      ],
-                      validator: (value) {
-                        return (value ?? '').trim().length == 10
-                            ? null
-                            : 'Required 10 Characters';
-                      },
-                      onSaved: (newValue) {
-                        cubit.batchNumberText = newValue?.trim() ?? '';
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Quantity',
-                        hintText: '0.000',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          gapPadding: 4,
-                        ),
-                      ),
-                      maxLines: 1,
-                      maxLength: 16,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^(\d+)?\.?\d{0,3}'),
-                        ),
-                      ],
-                      validator: (value) {
-                        return (value ?? '').trim().isNotEmpty
-                            ? null
-                            : 'Required';
-                      },
-                      onSaved: (newValue) {
-                        cubit.quantityText = newValue?.trim() ?? '';
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    FilledButton(
-                      onPressed: cubit.onTapAdd,
-                      style: FilledButton.styleFrom(
-                        minimumSize: Size.fromHeight(48),
-                      ),
-                      child: const Text('Add'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
+  void _onTapAdd() {
+    final cubit = context.read<HomePageCubit>();
+    AddBarcode.show(
+      context,
+      onAddBarcodeItem: cubit.onAddBarcodeItem,
     );
   }
 }

@@ -2,13 +2,13 @@ import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:qr_material_batch/models/material_batch_item_model.dart';
+import 'package:qr_material_batch/models/barcode_item_model.dart';
 
-class MaterialBatchItemTile extends StatelessWidget {
-  final MaterialBatchItem item;
+class HomePageBarcodeTile extends StatelessWidget {
+  final BarcodeItem item;
   final VoidCallback onTapDelete;
 
-  const MaterialBatchItemTile({
+  const HomePageBarcodeTile({
     super.key,
     required this.item,
     required this.onTapDelete,
@@ -16,6 +16,32 @@ class MaterialBatchItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final data = item.data ?? '';
+    Widget barcode;
+    switch (item.type) {
+      case null:
+        barcode = Container();
+        break;
+      case BarcodeItemType.barcode:
+        barcode = LayoutBuilder(
+          builder: (context, constraints) {
+            return BarcodeWidget(
+              barcode: Barcode.code39(),
+              data: data,
+              height: 32,
+              width: constraints.maxWidth * 0.8,
+              drawText: false,
+            );
+          },
+        );
+        break;
+      case BarcodeItemType.qr:
+        barcode = QrImageView(
+          data: data,
+          version: QrVersions.auto,
+        );
+        break;
+    }
     return Card(
       color: Colors.white,
       child: Stack(
@@ -25,18 +51,9 @@ class MaterialBatchItemTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Center(
-                  child: QrImageView(
-                    data: item.qrData(),
-                    size: 120,
-                  ),
-                ),
-                Center(
-                  child: BarcodeWidget(
-                    barcode: Barcode.code39(),
-                    data: item.barcodeData(),
-                    height: 32,
-                    drawText: false,
+                Expanded(
+                  child: Center(
+                    child: barcode,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -53,13 +70,16 @@ class MaterialBatchItemTile extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.only(top: 8),
                           child: SelectableText(
-                            item.qrData(),
+                            item.data ?? '',
                           ),
                         ),
                       ),
                       IconButton(
                         onPressed: () {
-                          _onTapCopy(context, item.qrData());
+                          _onTapCopy(
+                            context,
+                            item.data ?? '',
+                          );
                         },
                         icon: const Icon(
                           Icons.copy,
@@ -71,8 +91,10 @@ class MaterialBatchItemTile extends StatelessWidget {
                 ),
                 Text(
                   [
-                    item.qrData().length.toString(),
-                    'Characters',
+                    (item.data ?? '').length.toString(),
+                    ((item.data ?? '').length == 1)
+                        ? 'Character'
+                        : 'Characters',
                   ].join(' '),
                   style: const TextStyle(fontSize: 12),
                   textAlign: TextAlign.right,
