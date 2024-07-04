@@ -93422,7 +93422,7 @@ $2(a,b){var s=null,r=this.a
 return A.Ro(s,r.a9N(),s,new A.B8(s,B.J2,s,r.gQC(),s,s,B.a30,s))},
 $S:531}
 A.are.prototype={
-$2(a,b){var s,r=null,q=b.b,p=B.c.bL(q,480),o=this.a,n=A.m(o).h("lB<1,qr>")
+$2(a,b){var s,r=null,q=b.b,p=q<480?1:B.c.bL(q,480),o=this.a,n=A.m(o).h("lB<1,qr>")
 n=A.a2(new A.lB(o,new A.ard(this.b),n),!0,n.h("l.E"))
 o=A.aO([null,0],t.LO,t.S)
 s=n.length

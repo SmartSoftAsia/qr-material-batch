@@ -52,7 +52,7 @@ class _HomeViewState extends State<HomeView> {
         LayoutBuilder(
           builder: (_, constraint) {
             final maxWidth = constraint.maxWidth;
-            final crossAxisCount = maxWidth ~/ 480;
+            final crossAxisCount = maxWidth < 480 ? 1 : maxWidth ~/ 480;
             const double crossAxisSpacing = 16;
             final width =
                 (maxWidth - ((crossAxisCount - 1) * crossAxisSpacing) - 32) /
