@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'barcode_item_model.g.dart';
@@ -8,12 +9,23 @@ enum BarcodeItemType {
   qr,
   ;
 
+  bool get isBarcode => this == BarcodeItemType.barcode;
+
   String get title {
     switch (this) {
       case BarcodeItemType.barcode:
         return 'Barcode';
       case BarcodeItemType.qr:
         return 'QR Code';
+    }
+  }
+
+  IconData get iconData {
+    switch (this) {
+      case BarcodeItemType.barcode:
+        return CupertinoIcons.barcode;
+      case BarcodeItemType.qr:
+        return CupertinoIcons.qrcode;
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:qr_material_batch/models/barcode_item_model.dart';
 import 'package:qr_material_batch/utils/upper_case_text_formatter.dart';
 
@@ -38,16 +39,21 @@ class _AddBarcodeItemPageState extends State<AddBarcodeItemPage> {
             key: _formKey,
             child: TextFormField(
               decoration: InputDecoration(
-                labelText: 'Data',
+                labelText: widget.type.title,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   gapPadding: 4,
                 ),
               ),
               maxLines: 1,
-              textCapitalization: TextCapitalization.characters,
+              maxLength: widget.type.isBarcode ? 12 : null,
+              textCapitalization: widget.type.isBarcode
+                  ? TextCapitalization.none
+                  : TextCapitalization.characters,
               inputFormatters: [
-                UpperCaseTextFormatter(),
+                widget.type.isBarcode
+                    ? FilteringTextInputFormatter.digitsOnly
+                    : UpperCaseTextFormatter(),
               ],
               validator: (value) {
                 return (value ?? '').trim().isNotEmpty ? null : 'Required';

@@ -53,9 +53,9 @@ class AddBarcode {
                             },
                           ),
 
-                          /// '/barcode'
+                          /// '/order-number'
                           GoRoute(
-                            path: 'barcode',
+                            path: 'order-number',
                             builder: (context, state) {
                               return AddBarcodeItemPage(
                                 type: BarcodeItemType.barcode,
@@ -64,9 +64,9 @@ class AddBarcode {
                             },
                           ),
 
-                          /// '/qr'
+                          /// '/work-center'
                           GoRoute(
-                            path: 'qr',
+                            path: 'work-center',
                             builder: (context, state) {
                               return AddBarcodeItemPage(
                                 type: BarcodeItemType.qr,
@@ -134,9 +134,9 @@ class _AddBarcodePageState extends State<AddBarcodePage> {
             Expanded(
               child: _button(
                 iconData: CupertinoIcons.barcode,
-                title: 'Barcode',
+                title: 'Order Number',
                 onPressed: () {
-                  context.push('/barcode');
+                  context.push('/order-number');
                 },
               ),
             ),
@@ -144,9 +144,9 @@ class _AddBarcodePageState extends State<AddBarcodePage> {
             Expanded(
               child: _button(
                 iconData: CupertinoIcons.qrcode,
-                title: 'QR Code',
+                title: 'Work Center',
                 onPressed: () {
-                  context.push('/qr');
+                  context.push('/work-center');
                 },
               ),
             ),
