@@ -123,7 +123,7 @@ class _AddBarcodePageState extends State<AddBarcodePage> {
           children: [
             Expanded(
               child: _button(
-                iconData: CupertinoIcons.barcode,
+                iconData: CupertinoIcons.qrcode,
                 title: 'Material Batch',
                 onPressed: () {
                   context.push('/material-batch');
