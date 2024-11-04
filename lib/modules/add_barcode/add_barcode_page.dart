@@ -53,9 +53,9 @@ class AddBarcode {
                             },
                           ),
 
-                          /// '/order-number'
+                          /// '/barcode'
                           GoRoute(
-                            path: 'order-number',
+                            path: 'barcode',
                             builder: (context, state) {
                               return AddBarcodeItemPage(
                                 type: BarcodeItemType.barcode,
@@ -64,9 +64,9 @@ class AddBarcode {
                             },
                           ),
 
-                          /// '/work-center'
+                          /// '/qr'
                           GoRoute(
-                            path: 'work-center',
+                            path: 'qr',
                             builder: (context, state) {
                               return AddBarcodeItemPage(
                                 type: BarcodeItemType.qr,
@@ -133,20 +133,22 @@ class _AddBarcodePageState extends State<AddBarcodePage> {
             const SizedBox(height: 16),
             Expanded(
               child: _button(
-                iconData: CupertinoIcons.barcode,
-                title: 'Order Number',
+                iconData: CupertinoIcons.qrcode,
+                title: 'QR Code',
+                subtitle: 'eg. Work center, Tooling',
                 onPressed: () {
-                  context.push('/order-number');
+                  context.push('/qr');
                 },
               ),
             ),
             const SizedBox(height: 16),
             Expanded(
               child: _button(
-                iconData: CupertinoIcons.qrcode,
-                title: 'Work Center',
+                iconData: CupertinoIcons.barcode,
+                title: 'Barcode',
+                subtitle: 'eg. Order number',
                 onPressed: () {
-                  context.push('/work-center');
+                  context.push('/barcode');
                 },
               ),
             ),
@@ -160,6 +162,7 @@ class _AddBarcodePageState extends State<AddBarcodePage> {
   Widget _button({
     required IconData iconData,
     required String title,
+    String? subtitle,
     required VoidCallback onPressed,
   }) {
     return OutlinedButton(
@@ -175,7 +178,25 @@ class _AddBarcodePageState extends State<AddBarcodePage> {
             iconData,
           ),
           const SizedBox(width: 16),
-          Text(title),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleLarge,
+                  textAlign: TextAlign.left,
+                ),
+                if (subtitle != null && subtitle.trim().isNotEmpty)
+                  Text(
+                    subtitle,
+                    style: Theme.of(context).textTheme.bodySmall,
+                    textAlign: TextAlign.left,
+                  ),
+              ],
+            ),
+          ),
         ],
       ),
     );
