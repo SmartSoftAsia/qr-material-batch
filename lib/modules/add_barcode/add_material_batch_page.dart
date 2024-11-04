@@ -152,7 +152,7 @@ class _AddMaterialBatchPageState extends State<AddMaterialBatchPage> {
 
       widget.onAddBarcodeItem.call(
         BarcodeItem(
-          type: BarcodeItemType.barcode,
+          type: BarcodeItemType.qr,
           data: data,
         ),
       );
